@@ -1,13 +1,13 @@
-controllers.controller("mainController", function ($scope) {
+controllers.controller("mainController", function ($scope, $location, $rootScope) {
     var HM_DEVICES = "HMDevices";
 
     $scope.startScan = function () {
         $scope.isScanning = true;
-        $scope.devices = [];
+        $rootScope.devices = [];
 
         cordova.exec(function (discoveryFinished) {
             console.log(discoveryFinished);
-            $scope.devices = discoveryFinished;
+            $rootScope.devices = discoveryFinished;
             $scope.isScanning = false;
             $scope.$apply();
         }, null, HM_DEVICES, "reg_discovery_finished_callback", []);
@@ -17,7 +17,13 @@ controllers.controller("mainController", function ($scope) {
         $scope.$apply();
     }
 
+    $scope.showDetails = function (device) {
+        $location.path("/detail/" + device.address);
+    }
+
     document.addEventListener('deviceready', function () {
-        $scope.startScan();
+        if (_.isEmpty($rootScope.devices)) {
+            $scope.startScan();
+        }
     });
 })

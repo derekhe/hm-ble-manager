@@ -20,7 +20,7 @@
         <th>Name</th>
     </tr>
     <tr ng-repeat="device in devices">
-        <td>{{device.address}}</td>
+        <td ng-click="showDetails(device)">{{device.address}}</td>
         <td>{{device.name}}</td>
     </tr>
 </table>

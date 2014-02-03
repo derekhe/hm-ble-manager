@@ -10,6 +10,10 @@ app.config(['$routeProvider',
                 templateUrl: 'main.html',
                 controller: 'mainController'
             }).
+            when("/detail/:id", {
+                templateUrl: "detail.html",
+                controller: 'detailController'
+            }).
             otherwise({
                 redirectTo: '/main'
             });
