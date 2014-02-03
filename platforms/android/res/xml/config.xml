@@ -6,6 +6,9 @@
         <param name="android-package" value="org.apache.cordova.App" />
     </feature>
     <name>HM-BLE-Mangaer</name>
+    <feature name="BluetoothSerial">
+        <param name="android-package" value="com.megster.cordova.BluetoothSerial"/>
+    </feature>
     <description>
         A sample Apache Cordova application that responds to the deviceready event.
     </description>

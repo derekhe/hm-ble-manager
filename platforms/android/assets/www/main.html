@@ -1,0 +1,24 @@
+<nav class="navbar navbar-default navbar-static-top" role="navigation">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand">Find device</a>
+            <div class="pull-right">
+                <button class="btn btn-default navbar-btn navbar-right" ng-hide="scanStarted" ng-click="startScan()">
+                    Scan
+                </button>
+                <button class="btn btn-default navbar-btn navbar-right" ng-click="clearScanResult()">Clean</button>
+            </div>
+        </div>
+    </div>
+</nav>
+<h4>Devices</h4>
+<table class="table">
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+    </tr>
+    <tr ng-repeat="device in devices">
+        <td>{{device.address}}</td>
+        <td>{{device.name}}</td>
+    </tr>
+</table>
