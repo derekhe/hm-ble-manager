@@ -1,10 +1,20 @@
 controllers.controller("mainController", function ($scope) {
-    $scope.startScan = function () {
-        cordova.exec(function (rst) {
-            $scope.devices = rst;
-        }, function (fail) {
+    var HM_DEVICES = "HMDevices";
 
-        }, "BluetoothSerial", "list", []);
+    $scope.startScan = function () {
+        $scope.isScanning = true;
+        $scope.devices = [];
+
+        cordova.exec(function (discoveryFinished) {
+            console.log(discoveryFinished);
+            $scope.devices = discoveryFinished;
+            $scope.isScanning = false;
+            $scope.$apply();
+        }, null, HM_DEVICES, "reg_discovery_finished_callback", []);
+
+        cordova.exec(null, null, HM_DEVICES, "discovery", []);
+
+        $scope.$apply();
     }
 
     document.addEventListener('deviceready', function () {

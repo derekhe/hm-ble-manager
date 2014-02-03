@@ -2,6 +2,7 @@
     <div class="container-fluid">
         <div class="navbar-header">
             <a class="navbar-brand">Find device</a>
+
             <div class="pull-right">
                 <button class="btn btn-default navbar-btn navbar-right" ng-hide="scanStarted" ng-click="startScan()">
                     Scan
@@ -12,6 +13,7 @@
     </div>
 </nav>
 <h4>Devices</h4>
+<p ng-show="isScanning">Scanning...</p>
 <table class="table">
     <tr>
         <th>ID</th>
