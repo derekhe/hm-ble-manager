@@ -3,7 +3,7 @@ controllers.controller("mainController", function ($scope, $location, $rootScope
 
     $scope.startScan = function () {
         $scope.isScanning = true;
-        $rootScope.devices = [];
+        $scope.clearScanResult();
 
         cordova.exec(function (discoveryFinished) {
             console.log(discoveryFinished);
@@ -15,6 +15,11 @@ controllers.controller("mainController", function ($scope, $location, $rootScope
         cordova.exec(null, null, HM_DEVICES, "discovery", []);
 
         $scope.$apply();
+    }
+
+    $scope.clearScanResult = function()
+    {
+        $rootScope.devices = [];
     }
 
     $scope.showDetails = function (device) {

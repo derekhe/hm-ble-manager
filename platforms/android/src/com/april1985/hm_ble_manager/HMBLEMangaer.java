@@ -25,10 +25,11 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
-import org.apache.cordova.Config;
-import org.apache.cordova.CordovaActivity;
+import android.webkit.WebView;
+import org.apache.cordova.*;
 
 import static com.april1985.hm_ble_manager.HMDevices.ID_DISCOVERED_DEVICE;
 
@@ -57,6 +58,10 @@ public class HMBLEMangaer extends CordovaActivity {
         super.onCreate(savedInstanceState);
         super.init();
         super.loadUrl(Config.getStartUrl());
+
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            WebView.setWebContentsDebuggingEnabled(true);
+        }
 
         IntentFilter filter = new IntentFilter();
         filter.addAction(BluetoothDevice.ACTION_FOUND);
