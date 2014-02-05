@@ -1,25 +1,27 @@
 controllers.controller("mainController", function ($scope, $location, $rootScope) {
-    var HM_DEVICES = "HMDevices";
-
     $scope.startScan = function () {
         $scope.isScanning = true;
         $scope.clearScanResult();
 
-        cordova.exec(function (discoveryFinished) {
-            console.log(discoveryFinished);
-            $rootScope.devices = discoveryFinished;
+        cordova.exec(function () {
             $scope.isScanning = false;
             $scope.$apply();
         }, null, HM_DEVICES, "reg_discovery_finished_callback", []);
 
+        cordova.exec(function (device)
+        {
+            $rootScope.devices[device.address] = device;
+            $scope.$apply();
+        }, null, HM_DEVICES, "reg_discovered_device", [])
+
         cordova.exec(null, null, HM_DEVICES, "discovery", []);
 
-        $scope.$apply();
+        $scope.apply();
     }
 
     $scope.clearScanResult = function()
     {
-        $rootScope.devices = [];
+        $rootScope.devices = {};
     }
 
     $scope.showDetails = function (device) {

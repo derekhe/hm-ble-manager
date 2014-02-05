@@ -34,25 +34,6 @@ import org.apache.cordova.*;
 import static com.april1985.hm_ble_manager.HMDevices.ID_DISCOVERED_DEVICE;
 
 public class HMBLEMangaer extends CordovaActivity {
-    private String TAG = "HMBleManager";
-
-    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
-        public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction();
-            if (BluetoothDevice.ACTION_FOUND.equals(action)) {
-                BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-                Log.d(TAG, device.getAddress());
-
-                postMessage(ID_DISCOVERED_DEVICE, device);
-            } else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action))
-            {
-                Log.d(TAG, "Discovery finished");
-
-                postMessage(HMDevices.ID_DISCOVERY_FINISHED, true);
-            }
-        }
-    };
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,17 +43,7 @@ public class HMBLEMangaer extends CordovaActivity {
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             WebView.setWebContentsDebuggingEnabled(true);
         }
-
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(BluetoothDevice.ACTION_FOUND);
-        filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
-
-        registerReceiver(mReceiver, filter);
     }
 
-    @Override
-    public void onDestroy() {
-        unregisterReceiver(mReceiver);
-    }
 }
 

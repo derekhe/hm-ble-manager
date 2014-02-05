@@ -21,3 +21,5 @@ app.config(['$routeProvider',
 ]);
 
 var controllers = angular.module("appControllers", []);
+
+var HM_DEVICES = "HMDevices";

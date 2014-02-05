@@ -2,6 +2,7 @@
     <div class="container-fluid">
         <div class="navbar-header">
             <a class="navbar-brand">Device details</a>
+
             <div class="pull-right">
                 <button class="btn btn-default navbar-btn navbar-right" ng-hide="scanStarted" ng-click="back()">
                     Back
@@ -11,3 +12,7 @@
     </div>
 </nav>
 <p>{{id}}</p>
+<div>
+    <button class="btn btn-default" ng-click="connect()">Connect</button>
+    <button class="btn btn-default" ng-click="test()">Test</button>
+</div>
