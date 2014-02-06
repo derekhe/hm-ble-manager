@@ -19,19 +19,11 @@
 
 package com.april1985.hm_ble_manager;
 
-import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.webkit.WebView;
-import org.apache.cordova.*;
-
-import static com.april1985.hm_ble_manager.HMDevices.ID_DISCOVERED_DEVICE;
+import org.apache.cordova.Config;
+import org.apache.cordova.CordovaActivity;
 
 public class HMBLEMangaer extends CordovaActivity {
     @Override
@@ -40,7 +32,7 @@ public class HMBLEMangaer extends CordovaActivity {
         super.init();
         super.loadUrl(Config.getStartUrl());
 
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             WebView.setWebContentsDebuggingEnabled(true);
         }
     }

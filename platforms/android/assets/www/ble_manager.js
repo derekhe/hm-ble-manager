@@ -16,7 +16,7 @@ controllers.controller("mainController", function ($scope, $location, $rootScope
 
         cordova.exec(null, null, HM_DEVICES, "discovery", []);
 
-        $scope.apply();
+        $scope.$apply();
     }
 
     $scope.clearScanResult = function()
