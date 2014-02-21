@@ -13,5 +13,12 @@
 </nav>
 <h4 ng-show="connecting">Connecting...</h4>
 <h4 ng-show="connected">Connected</h4>
-<div>
+<div ng-show="connected">
+    <button class="btn btn-default" ng-click="getADVI()">ADVI</button>
+    <h4>ADVI: {{ADVI}}</h4>
+    <button class="btn btn-default" ng-click="getBattery()">Battery</button>
+    <h4>BATT: {{battery}}</h4>
+    <p></p>
+    <h4>Error: {{error}}</h4>
+</div>
 </div>

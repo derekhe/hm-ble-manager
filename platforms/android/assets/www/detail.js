@@ -3,7 +3,7 @@ controllers.controller("detailController", function ($scope, $routeParams, $loca
     $scope.connecting = true;
 
     $scope.back = function () {
-        cordova.exec(null,null, HM_DEVICES, "disconnect", []);
+        cordova.exec(null, null, HM_DEVICES, "disconnect", []);
         $location.path("/main");
     }
 
@@ -34,6 +34,29 @@ controllers.controller("detailController", function ($scope, $routeParams, $loca
         }, HM_DEVICES, "test", [$scope.id]);
     }
 
+    $scope.getADVI = function () {
+        $scope.ADVI = "";
+
+        cordova.exec(function (advi) {
+            $scope.ADVI = advi;
+            $scope.$apply();
+        }, function (error) {
+            $scope.error = error;
+            $scope.$apply();
+        }, HM_DEVICES, "AT+ADVI", []);
+    }
+
+    $scope.getBattery = function () {
+        $scope.battery = "";
+
+        cordova.exec(function (battery) {
+            $scope.battery = battery;
+            $scope.$apply();
+        }, function (error) {
+            $scope.error = error;
+            $scope.$apply();
+        }, HM_DEVICES, "AT+BATT", []);
+    }
     document.addEventListener('deviceready', function () {
         $timeout($scope.connect, 500);
     });
