@@ -14,7 +14,9 @@ import java.util.UUID;
 import static android.content.Context.BLUETOOTH_SERVICE;
 import static com.april1985.hm_ble_manager.GattAttributes.HM_RX_TX;
 
+
 public class HMDevices extends CordovaPlugin implements BluetoothAdapter.LeScanCallback {
+    public static final int DELAY_MILLIS = 500;
     private String TAG = "HMDevices";
     private BluetoothAdapter btAdapter;
     private CallbackContext scanCallback;
@@ -26,7 +28,7 @@ public class HMDevices extends CordovaPlugin implements BluetoothAdapter.LeScanC
 
     private BluetoothGatt btGatt;
     private Context context;
-    private String lastRead;
+    private String lastRead = "";
 
     @Override
     public void initialize(CordovaInterface cordova, CordovaWebView webView) {
@@ -48,6 +50,13 @@ public class HMDevices extends CordovaPlugin implements BluetoothAdapter.LeScanC
         }
     }
 
+    String byteArrayToHex(byte[] a) {
+        StringBuilder sb = new StringBuilder();
+        for (byte b : a)
+            sb.append(String.format("%02X", b & 0xff));
+        return sb.toString();
+    }
+
     @Override
     public void onLeScan(BluetoothDevice bluetoothDevice, int rssi, byte[] scanRecord) {
         JSONObject jsonObject = new JSONObject();
@@ -55,7 +64,11 @@ public class HMDevices extends CordovaPlugin implements BluetoothAdapter.LeScanC
             jsonObject.put("address", bluetoothDevice.getAddress());
             jsonObject.put("class", bluetoothDevice.getBluetoothClass());
             jsonObject.put("name", bluetoothDevice.getName());
-            jsonObject.put("uuid", bluetoothDevice.getUuids());
+            String scannedCode = byteArrayToHex(scanRecord);
+            jsonObject.put("uuid", scannedCode.substring(18, 50));
+            jsonObject.put("major", scannedCode.substring(50, 54));
+            jsonObject.put("minor", scannedCode.substring(54, 58));
+            jsonObject.put("isIBeacon", isIBeacon(scanRecord));
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -64,6 +77,23 @@ public class HMDevices extends CordovaPlugin implements BluetoothAdapter.LeScanC
         pluginResult.setKeepCallback(true);
         scanCallback.sendPluginResult(pluginResult);
     }
+
+    public boolean isIBeacon(byte[] scanData) {
+        int startByte = 2;
+        while (startByte <= 5) {
+            if (((int) scanData[startByte] & 0xff) == 0x4c
+                    && ((int) scanData[startByte + 1] & 0xff) == 0x00
+                    && ((int) scanData[startByte + 2] & 0xff) == 0x02
+                    && ((int) scanData[startByte + 3] & 0xff) == 0x15) {
+                // yes! This is an iBeacon
+                return true;
+            }
+
+            startByte++;
+        }
+        return false;
+    }
+
 
     BluetoothGattCharacteristic txRx;
 
@@ -98,9 +128,7 @@ public class HMDevices extends CordovaPlugin implements BluetoothAdapter.LeScanC
             disconnect();
             return true;
         } else if (action.equals("test")) {
-            txRx.setValue("AT");
-            btGatt.setCharacteristicNotification(txRx, true);
-            btGatt.writeCharacteristic(txRx);
+            write("AT");
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -110,10 +138,45 @@ public class HMDevices extends CordovaPlugin implements BluetoothAdapter.LeScanC
                         callbackContext.error("Test failed");
                     }
                 }
-            }, 100);
+            }, DELAY_MILLIS);
+        } else if (action.equals("AT+ADVI")) {
+            write("AT+ADVI?");
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if (!lastRead.contains("OK+Get:")) {
+                        callbackContext.error(lastRead);
+                        return;
+                    }
+
+
+                    callbackContext.success(lastRead.substring(lastRead.length() - 1));
+                }
+            }, DELAY_MILLIS);
+        } else if (action.equals("AT+BATT")) {
+            write("AT+BATT?");
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if (!lastRead.contains("OK+Get:")) {
+                        callbackContext.error(lastRead);
+                        return;
+                    }
+
+                    callbackContext.success(lastRead.substring(lastRead.length() - 3));
+                }
+            }, DELAY_MILLIS);
+
         }
 
         return true;
+    }
+
+    private void write(String cmd) {
+        txRx.setValue(cmd);
+        btGatt.setCharacteristicNotification(txRx, true);
+        btGatt.writeCharacteristic(txRx);
+        lastRead = "";
     }
 
 

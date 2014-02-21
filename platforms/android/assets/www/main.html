@@ -16,11 +16,14 @@
 <p ng-show="isScanning">Scanning...</p>
 <table class="table">
     <tr>
-        <th>ID</th>
-        <th>Name</th>
+        <th>Beacons</th>
     </tr>
     <tr ng-repeat="device in devices">
-        <td ng-click="showDetails(device)">{{device.address}}</td>
-        <td>{{device.name}}</td>
+        <td ng-click="showDetails(device)">
+            <p>{{device.name}} {{device.address}}</p>
+            <p>{{device.uuid}}</p>
+            <p>{{device.major}}-{{device.minor}}</p>
+            <p ng-show="!device.isIBeacon">Device is not a iBeacon</p>
+        </td>
     </tr>
 </table>
