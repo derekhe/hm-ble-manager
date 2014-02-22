@@ -25,7 +25,7 @@ controllers.controller("mainController", function ($scope, $location, $rootScope
     }
 
     $scope.showDetails = function (device) {
-        $location.path("/detail/" + device.address);
+        $location.path("/detail/" + device.address + "/" + device.uuid + "/" + device.major + "/" + device.minor);
     }
 
     document.addEventListener('deviceready', function () {

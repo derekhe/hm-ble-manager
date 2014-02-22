@@ -13,17 +13,17 @@
     </div>
 </nav>
 <h4>Devices</h4>
+
 <p ng-show="isScanning">Scanning...</p>
-<table class="table">
-    <tr>
-        <th>Beacons</th>
-    </tr>
+<table class="table table-bordered">
     <tr ng-repeat="device in devices">
-        <td ng-click="showDetails(device)">
-            <p>{{device.name}} {{device.address}} RSSI:{{device.rssi}}</p>
-            <p>{{device.uuid}}</p>
-            <p>{{device.major}}-{{device.minor}}</p>
-            <p ng-show="!device.isIBeacon">Device is not a iBeacon</p>
+        <td ng-click="showDetails(device)" ng-class="{danger: !device.isIBeacon}">
+            <div>
+                <strong>{{device.name}} {{device.address}}</strong><strong class="pull-right">RSSI:{{device.rssi}}</strong>
+            </div>
+            <div class="text-primary">{{device.uuid}}</div>
+            <div class="text-primary">{{device.major}}-{{device.minor}}</div>
+            <div class="text-danger" ng-show="!device.isIBeacon">Device is not a iBeacon</div>
         </td>
     </tr>
 </table>

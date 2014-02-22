@@ -1,5 +1,9 @@
 controllers.controller("detailController", function ($scope, $routeParams, $location, $timeout) {
-    $scope.id = $routeParams.id;
+    $scope.address = $routeParams.address;
+    $scope.uuid = $routeParams.uuid;
+    $scope.major = $routeParams.major;
+    $scope.minor = $routeParams.minor;
+
     $scope.connecting = true;
 
     $scope.back = function () {
@@ -15,11 +19,7 @@ controllers.controller("detailController", function ($scope, $routeParams, $loca
             $scope.test();
         }, null, HM_DEVICES, "reg_connect_callback", []);
 
-        cordova.exec(function (success) {
-
-        }, function (fail) {
-
-        }, HM_DEVICES, "connect", [$scope.id]);
+        cordova.exec(null, null, HM_DEVICES, "connect", [$scope.address]);
     }
 
     $scope.test = function () {
@@ -57,6 +57,7 @@ controllers.controller("detailController", function ($scope, $routeParams, $loca
             $scope.$apply();
         }, HM_DEVICES, "AT+BATT", []);
     }
+
     document.addEventListener('deviceready', function () {
         $timeout($scope.connect, 500);
     });

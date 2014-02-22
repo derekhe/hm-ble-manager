@@ -7,10 +7,10 @@ app.config(['$routeProvider',
     function ($routeProvider) {
         $routeProvider.
             when('/main', {
-                templateUrl: 'main.html',
+                templateUrl: 'ble_manager.html',
                 controller: 'mainController'
             }).
-            when("/detail/:id", {
+            when("/detail/:address/:uuid/:major/:minor", {
                 templateUrl: "detail.html",
                 controller: 'detailController'
             }).

@@ -1,7 +1,7 @@
 <nav class="navbar navbar-default navbar-static-top" role="navigation">
     <div class="container-fluid">
         <div class="navbar-header">
-            <a class="navbar-brand">{{id}}</a>
+            <a class="navbar-brand">{{address}}</a>
 
             <div class="pull-right">
                 <button class="btn btn-default navbar-btn navbar-right" ng-hide="scanStarted" ng-click="back()">
@@ -11,13 +11,18 @@
         </div>
     </div>
 </nav>
-<h4 ng-show="connecting">Connecting...</h4>
-<h4 ng-show="connected">Connected</h4>
+<p>
+<h5 class="text-primary"><strong>UUID: </strong>{{uuid}}</h5>
+<h5 class="text-primary"><strong>Major: </strong>{{major}} <strong>Minor: </strong>{{minor}}</h5>
+</p>
+<h5 ng-show="connecting" class="text-info">Connecting...</h5>
+<h5 ng-show="connected" class="text-primary">Connected</h5>
 <div ng-show="connected">
     <button class="btn btn-default" ng-click="getADVI()">ADVI</button>
     <h4>ADVI: {{ADVI}}</h4>
     <button class="btn btn-default" ng-click="getBattery()">Battery</button>
     <h4>BATT: {{battery}}</h4>
+
     <p></p>
     <h4>Error: {{error}}</h4>
 </div>
