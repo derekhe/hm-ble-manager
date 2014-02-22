@@ -69,6 +69,7 @@ public class HMDevices extends CordovaPlugin implements BluetoothAdapter.LeScanC
             jsonObject.put("major", scannedCode.substring(50, 54));
             jsonObject.put("minor", scannedCode.substring(54, 58));
             jsonObject.put("isIBeacon", isIBeacon(scanRecord));
+            jsonObject.put("rssi", rssi);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -148,7 +149,6 @@ public class HMDevices extends CordovaPlugin implements BluetoothAdapter.LeScanC
                         callbackContext.error(lastRead);
                         return;
                     }
-
 
                     callbackContext.success(lastRead.substring(lastRead.length() - 1));
                 }

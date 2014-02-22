@@ -20,7 +20,7 @@
     </tr>
     <tr ng-repeat="device in devices">
         <td ng-click="showDetails(device)">
-            <p>{{device.name}} {{device.address}}</p>
+            <p>{{device.name}} {{device.address}} RSSI:{{device.rssi}}</p>
             <p>{{device.uuid}}</p>
             <p>{{device.major}}-{{device.minor}}</p>
             <p ng-show="!device.isIBeacon">Device is not a iBeacon</p>
