@@ -6,3 +6,7 @@
 *.ear
 **/bin
 **/gen
+**/.idea/*
+**/out/*
+**/bower_components/*
+**/*.iml
