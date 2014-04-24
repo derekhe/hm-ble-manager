@@ -1,7 +1,8 @@
 var app = angular.module('hmBleManager', [
     'ngRoute',
     'ionic',
-    'appControllers'
+    'appControllers',
+    'green.inputmask4angular'
 ]);
 
 app.config(function($stateProvider, $urlRouterProvider) {

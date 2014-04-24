@@ -16,19 +16,19 @@ import static com.april1985.hm_ble_manager.GattAttributes.HM_RX_TX;
 
 
 public class HMDevices extends CordovaPlugin implements BluetoothAdapter.LeScanCallback {
-    public static final int DELAY_MILLIS = 500;
+    public static final int DELAY_MILLIS = 100;
     private String TAG = "HMDevices";
     private BluetoothAdapter btAdapter;
     private CallbackContext scanCallback;
     private CallbackContext scanComplete;
     private CallbackContext connectCallback;
+    private CallbackContext readCallback;
 
     private BluetoothManager btManager;
     private BluetoothAdapter adapter;
 
     private BluetoothGatt btGatt;
     private Context context;
-    private String lastRead = "";
 
     @Override
     public void initialize(CordovaInterface cordova, CordovaWebView webView) {
@@ -128,45 +128,10 @@ public class HMDevices extends CordovaPlugin implements BluetoothAdapter.LeScanC
         } else if (action.equals("disconnect")) {
             disconnect();
             return true;
-        } else if (action.equals("test")) {
-            write("AT");
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    if ("OK".equals(lastRead)) {
-                        callbackContext.success();
-                    } else {
-                        callbackContext.error("Test failed");
-                    }
-                }
-            }, DELAY_MILLIS);
-        } else if (action.equals("AT+ADVI")) {
-            write("AT+ADVI?");
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    if (!lastRead.contains("OK+Get:")) {
-                        callbackContext.error(lastRead);
-                        return;
-                    }
-
-                    callbackContext.success(lastRead.substring(lastRead.length() - 1));
-                }
-            }, DELAY_MILLIS);
-        } else if (action.equals("AT+BATT")) {
-            write("AT+BATT?");
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    if (!lastRead.contains("OK+Get:")) {
-                        callbackContext.error(lastRead);
-                        return;
-                    }
-
-                    callbackContext.success(lastRead.substring(lastRead.length() - 3));
-                }
-            }, DELAY_MILLIS);
-
+        } else if (action.contains("AT")) {
+            write(action);
+            sendNoResult(callbackContext);
+            readCallback = callbackContext;
         }
 
         return true;
@@ -176,7 +141,6 @@ public class HMDevices extends CordovaPlugin implements BluetoothAdapter.LeScanC
         txRx.setValue(cmd);
         btGatt.setCharacteristicNotification(txRx, true);
         btGatt.writeCharacteristic(txRx);
-        lastRead = "";
     }
 
 
@@ -247,8 +211,11 @@ public class HMDevices extends CordovaPlugin implements BluetoothAdapter.LeScanC
         public void onCharacteristicChanged(BluetoothGatt gatt,
                                             BluetoothGattCharacteristic characteristic) {
             if (characteristic.getUuid() == txRx.getUuid()) {
-                lastRead = new String(characteristic.getValue());
+                readCallback.success(new String(characteristic.getValue()));
+                return;
             }
+
+            readCallback.error("uuid not correct");
         }
     };
 

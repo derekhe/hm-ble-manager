@@ -1,30 +1,56 @@
-<nav class="navbar navbar-default navbar-static-top" role="navigation">
-    <div class="container-fluid">
-        <div class="navbar-header">
-            <a class="navbar-brand">{{address}}</a>
+<ion-view title="{{device.address}}">
+    <ion-nav-buttons side="left">
+        <button class="button button-light"
+                ng-click="back()">
+            <i class="icon ion-android-arrow-back"></i>
+        </button>
+    </ion-nav-buttons>
+    <ion-nav-buttons side="right">
+        <button class="button button-light"
+                ng-click="refresh()" ng-show="connected">
+            <i class="icon ion-refresh" ng-hide="refreshing"></i>
+            <i class="icon ion-refreshing" ng-show="refreshing"></i>
+        </button>
+    </ion-nav-buttons>
 
-            <div class="pull-right">
-                <button class="btn btn-default navbar-btn navbar-right" ng-hide="scanStarted" ng-click="back()">
-                    Back
-                </button>
+    <ion-content>
+        <div class="list">
+            <label class="item" ng-show="connecting">
+                Connecting
+            </label>
+
+            <label class="item" ng-show="connected">
+                Connected
+            </label>
+
+            <label class="item item-input item-stacked-label">
+                <span class="input-label">UUID</span>
+                <!--<input type="text" ng-model="device.uuid" input-mask="maskOption"/>-->
+                <input type="text" ng-model="device.uuid"/>
+            </label>
+            <label class="item item-input">
+                <span class="input-label">Major</span>
+                <input type="text" ng-model="device.major" class="col col-20"/>
+                <span class="input-label">Minor</span>
+                <input type="text" ng-model="device.minor" class="col col-20"/>
+            </label>
+        </div>
+
+        <div class="list">
+            <div class="item range range-positive">
+                <span class="col col-20">Battery</span>
+                <input type="range" name="volume" min="0" max="100" ng-model="device.battery" disabled>
+                <span class="col col-20">{{device.battery}}%</span>
+            </div>
+
+            <div class="item range range-positive">
+                <span class="col col-20">Interval</span>
+                <input type="range" name="volume" min="0" max="15" ng-model="device.advi">
+                <span class="col col-20">{{getADVIms()}}ms</span>
             </div>
         </div>
-    </div>
-</nav>
 
-<p>
-<h5 class="text-primary"><strong>UUID: </strong>{{uuid}}</h5>
-<h5 class="text-primary"><strong>Major: </strong>{{major}} <strong>Minor: </strong>{{minor}}</h5>
-</p>
-<h5 ng-show="connecting" class="text-info">Connecting...</h5>
-<h5 ng-show="connected" class="text-primary">Connected</h5>
-<div ng-show="connected">
-    <button class="btn btn-default" ng-click="getADVI()">ADVI</button>
-    <h4>ADVI: {{ADVI}}</h4>
-    <button class="btn btn-default" ng-click="getBattery()">Battery</button>
-    <h4>BATT: {{battery}}</h4>
+        <button class="button button-block button-positive" ng-click="save()">Save</button>
+    </ion-content>
+</ion-view>
 
-    <p></p>
-    <h4>Error: {{error}}</h4>
-</div>
-</div>

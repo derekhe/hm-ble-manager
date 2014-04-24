@@ -4,23 +4,22 @@ controllers.controller("mainController", function ($scope, $location, $rootScope
         $scope.clearScanResult();
 
         cordova.exec(function () {
-            $scope.isScanning = false;
-            $scope.$apply();
+            $scope.$apply(function () {
+                $scope.isScanning = false;
+            });
         }, null, HM_DEVICES, "reg_discovery_finished_callback", []);
 
-        cordova.exec(function (device)
-        {
-            $rootScope.devices[device.address] = device;
-            $scope.$apply();
-        }, null, HM_DEVICES, "reg_discovered_device", [])
+        cordova.exec(function (device) {
+            $scope.$apply(function () {
+                $rootScope.devices[device.address] = device;
+            });
+        }, null, HM_DEVICES, "reg_discovered_device", []);
 
         cordova.exec(null, null, HM_DEVICES, "discovery", []);
 
-        $scope.$apply();
     }
 
-    $scope.clearScanResult = function()
-    {
+    $scope.clearScanResult = function () {
         $rootScope.devices = {};
     }
 
@@ -29,8 +28,6 @@ controllers.controller("mainController", function ($scope, $location, $rootScope
     }
 
     document.addEventListener('deviceready', function () {
-        if (_.isEmpty($rootScope.devices)) {
             $scope.startScan();
-        }
     });
 })
